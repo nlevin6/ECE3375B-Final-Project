@@ -3,7 +3,8 @@
 .equ bit_9, 0x00000200
 button_addr: .word 0xFF200050 
 count: .word 0x00000000  // Variable to store the count
-
+HEX3_HEX0_BASE:	.word	0xFF200020
+SW_BASE:        .word   0xFF200040
 /* This program provides a simple example of code for the ARM A9. The program
 * performs the following:
 * 1. starts the ARM A9 private timer
@@ -62,34 +63,200 @@ pressedButton:
     
 	bne loop1
 	b WAIT
+setMotorSpeed:
 
-calculateRPM:
-    
+
+
+calculateRPM:   
 ldr r6, =count      // Load the address of count again
 ldr r7, [r6]        // Load the original count value
 
-mov r8, #60         // Load divisor 60 into r8
-mov r9, #0          // Initialize quotient (result) in r9
-mov r10, #0         // Initialize remainder in r10
+mov r8, #3600       // Load 3600 into r8
+mul r12, r7, r8      // Multiply the value in r7 by 3600 and store the result in r9
 
-//delate this when divitor is working
-mov r7, #0
+mov r7, #0          // Set count to zero
 
-str r7, [r6] 
+str r7, [r6]   
 mov r6, #0
+
+
+displayRPM:
+
+mov r10,#0x00000000
+mov r11,#0x00000000
+
+ldr R9, #SW_BASE       // Load the base address of the switches
+ldr R10, [R9]          // Load the current state of the switches
+
+cmp R10, #1       
+bne LOOP
+
+//first hext bit
+AND   R9, R12, #0x0000000F  
+
+cmp r9, #0
+moveq r10, #0x3F
+cmp r9, #1
+moveq r10, #0x06
+cmp r9, #2
+moveq r10, #0x5B
+cmp r9, #3
+moveq r10, #0x4F
+cmp r9, #4
+moveq r10, #0x66
+cmp r9, #5
+moveq r10, #0x6D
+cmp r9, #6
+moveq r10, #0x7D
+cmp r9, #7
+moveq r10, #0x07
+cmp r9, #8
+moveq r10, #0x7F
+cmp r9, #9
+moveq r10, #0x6F
+cmp r9, #0xA
+moveq r10, #0xF7
+cmp r9, #0xB
+moveq r10, #0xFC
+cmp r9, #0xC
+moveq r10, #0xB9
+cmp r9, #0xD
+moveq r10, #0xDE
+cmp r9, #0xE
+moveq r10, #0xF9
+cmp r9, #0xF
+moveq r10, #0xF1
+
+add r11,r10,r11
+
+//second hex bit
+AND   R9, R12, #0x000000F0  
+lsr r9,#4
+
+cmp r9, #0
+moveq r10, #0x3F
+cmp r9, #1
+moveq r10, #0x06
+cmp r9, #2
+moveq r10, #0x5B
+cmp r9, #3
+moveq r10, #0x4F
+cmp r9, #4
+moveq r10, #0x66
+cmp r9, #5
+moveq r10, #0x6D
+cmp r9, #6
+moveq r10, #0x7D
+cmp r9, #7
+moveq r10, #0x07
+cmp r9, #8
+moveq r10, #0x7F
+cmp r9, #9
+moveq r10, #0x6F
+cmp r9, #0xA
+moveq r10, #0xF7
+cmp r9, #0xB
+moveq r10, #0xFC
+cmp r9, #0xC
+moveq r10, #0xB9
+cmp r9, #0xD
+moveq r10, #0xDE
+cmp r9, #0xE
+moveq r10, #0xF9
+cmp r9, #0xF
+moveq r10, #0xF1
+
+lsl r10 ,#8
+add r11,r10,r11
+
+//third hex bit
+AND   R9, R12, #0x00000F00  
+lsr r9,#8
+
+cmp r9, #0
+moveq r10, #0x3F
+cmp r9, #1
+moveq r10, #0x06
+cmp r9, #2
+moveq r10, #0x5B
+cmp r9, #3
+moveq r10, #0x4F
+cmp r9, #4
+moveq r10, #0x66
+cmp r9, #5
+moveq r10, #0x6D
+cmp r9, #6
+moveq r10, #0x7D
+cmp r9, #7
+moveq r10, #0x07
+cmp r9, #8
+moveq r10, #0x7F
+cmp r9, #9
+moveq r10, #0x6F
+cmp r9, #0xA
+moveq r10, #0xF7
+cmp r9, #0xB
+moveq r10, #0xFC
+cmp r9, #0xC
+moveq r10, #0xB9
+cmp r9, #0xD
+moveq r10, #0xDE
+cmp r9, #0xE
+moveq r10, #0xF9
+cmp r9, #0xF
+moveq r10, #0xF1
+
+lsl r10 ,#16
+add r11,r10,r11
+
+//fourth hex bit
+AND   R9, R12, #0x0000F000  
+lsr r9,#12
+
+cmp r9, #0
+moveq r10, #0x3F
+cmp r9, #1
+moveq r10, #0x06
+cmp r9, #2
+moveq r10, #0x5B
+cmp r9, #3
+moveq r10, #0x4F
+cmp r9, #4
+moveq r10, #0x66
+cmp r9, #5
+moveq r10, #0x6D
+cmp r9, #6
+moveq r10, #0x7D
+cmp r9, #7
+moveq r10, #0x07
+cmp r9, #8
+moveq r10, #0x7F
+cmp r9, #9
+moveq r10, #0x6F
+cmp r9, #0xA
+moveq r10, #0xF7
+cmp r9, #0xB
+moveq r10, #0xFC
+cmp r9, #0xC
+moveq r10, #0xB9
+cmp r9, #0xD
+moveq r10, #0xDE
+cmp r9, #0xE
+moveq r10, #0xF9
+cmp r9, #0xF
+moveq r10, #0xF1
+
+lsl r10 ,#24
+add r11,r10,r11
+
+
+
+
+
+	ldr r9, HEX3_HEX0_BASE
+	str r11, [r9]
+
 b LOOP
-
-
-DIVIDE_LOOP:
-cmp r7, r8          // Compare dividend with divisor
-subge r7, r7, r8    // Subtract divisor from dividend if dividend >= divisor
-addge r9, r9, #1    // Increment quotient if dividend >= divisor
-bge DIVIDE_LOOP     // Repeat loop if dividend >= divisor
-
-mov r6, #0
-mov r7, #0
-b LOOP              // Branch to the WAIT label
-
 
 
 
