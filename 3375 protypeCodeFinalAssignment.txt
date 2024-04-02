@@ -73,10 +73,10 @@ setBikeRPM:
    	ldr r4, [r3]      
 	
 	cmp r4, #2
-	addeq r5,r5, #0x10
+	addeq r5,r5, #0x100
 	
 	cmp r4, #4
-	subeq r5,r5, #0x10
+	subeq r5,r5, #0x100
 	
   	cmp r5, #0
 	movlt r5, #0
@@ -126,11 +126,11 @@ movlt r8, #0
 ldr R9, #SW_BASE       // Load the base address of the switches
 ldr R10, [R9]          // Load the current state of the switches
 cmp R10, #1       
-ANDEQ   R9, R5, #0x0000F000  
+ANDEQ   R9, R5, #0x0000000F  
 cmp R10, #2       
-ANDEQ   R9, R8, #0x0000F000 
+ANDEQ   R9, R8, #0x0000000F 
 cmp R10, #4       
-ANDEQ   R9, R12,#0x0000F000  
+ANDEQ   R9, R12,#0x0000000F  
 
 cmp r9, #0
 moveq r10, #0x3F
@@ -328,4 +328,3 @@ b LOOP
 
 
 .end
-
